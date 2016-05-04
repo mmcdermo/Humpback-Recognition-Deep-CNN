@@ -1,6 +1,5 @@
 """
-  Usage: python evaluate.py <basicModel | ...> <model file> <image>
-  Output: evaluated_<image>, model output
+ Functions to evaluate model accuracy  
 """
 
 import sys
@@ -13,10 +12,6 @@ import settings
 
 from images import humpbackImages, reshapeKeras, preprocessImage, augmentImage
 from util import dequantizeValue
-
-def usage():
-    print("Usage: python evaluate.py <image directory> <training CSV> <basicModel | ...> <model file> <image>")
-    exit(1)
 
 def classOutput(softmaxOutput):
     """
