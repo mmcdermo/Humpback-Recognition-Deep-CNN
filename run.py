@@ -170,7 +170,7 @@ def main():
 
         # Evaluate classification performance
         print("Epoch pre-testing evaluation")
-        for X_test, Y_test, filenames in testDatagen.generate(4, dataset=testingData):
+        for X_test, Y_test, filenames in testDatagen.generate(1, dataset=testingData):
             model.evaluate(X_test, Y_test)
 
         batch = 0
