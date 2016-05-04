@@ -16,7 +16,7 @@ docker build -t humpbackModel ./Docker
 
 Once the docker image is built, you can run it and mount this github repo inside of it:
 ```
-docker run -it /path/to/this/repo/:/humpbackModel/ humpbackModel
+docker run -it -v /path/to/this/repo/:/humpbackModel/ humpbackModel
 ```
 
 Then, you should be able to run the model inside the container:
