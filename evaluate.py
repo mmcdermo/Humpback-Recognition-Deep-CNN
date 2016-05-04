@@ -42,7 +42,7 @@ def permutationPredictClasses(model, datagen, trainDict, imageNames, numPermutat
 
     print("Predicting classes from permutations...")
     print(np.array(inputBatch).shape)
-    outputs = model.ensemblePredict(np.array(inputBatch))
+    outputs = model.predict(np.array(inputBatch))
 
     print("Averaging over predictions... ")
     perImagePredictions = []

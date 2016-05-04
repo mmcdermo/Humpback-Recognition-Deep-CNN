@@ -6,10 +6,8 @@ RUN apt-get update; \
     python-numpy python-scipy \
     build-essential python-dev python-setuptools \
     libatlas-dev libatlas3gf-base \
-    apt-get install -y emacs24 python-skimage \
-    emacs24 -nox
-
-RUN apt-get install -y libhdf5-dev
+    emacs24 python-skimage \
+    libhdf5-dev 
 
 RUN update-alternatives --set libblas.so.3 \
     /usr/lib/atlas-base/atlas/libblas.so.3; \
