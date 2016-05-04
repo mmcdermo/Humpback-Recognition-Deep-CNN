@@ -21,11 +21,11 @@ docker run -it /path/to/this/repo/:/humpbackModel/ humpbackModel
 
 Then, you should be able to run the model inside the container:
 ```
-/humpbackModel/run.py -h
+python /humpbackModel/run.py -h
 ```
 
 ## Usage and examples
-Usage of run.py can also be obtained by run.py -h
+Usage of run.py can also be obtained by ```python run.py -h```
 
 ### Prediction
 To predict the identity of a whale in an image, you can run:
