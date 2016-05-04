@@ -10,7 +10,7 @@ import numpy as np
 import util 
 import settings
 
-from images import humpbackImages, reshapeKeras, preprocessImage, augmentImage
+from images import reshapeKeras, preprocessImage, augmentImage
 from util import dequantizeValue
 
 def classOutput(softmaxOutput):

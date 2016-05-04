@@ -157,70 +157,6 @@ class ParallelDatagen():
                 print("Item retrieval timed out.")
                 print(self.queue.qsize())
 
-def humpbackImages(imageFolder, dataset, h5file, batchSize=1, save=False):
-    """
-    Generator that produces 256x256 images from images in `imageFolder`.
-    These images are uncropped and unmodified except for scale.
-
-    Each iteration of the generator will yield an array of up to `batchSize` images
-    """
-    n = 0
-    collectedData = []
-    collectedLabels = []
-
-    filenames = dataset.keys()
-    random.shuffle(filenames)
-
-    for filename in filenames:
-        try:
-            x = float(dataset[filename][3])
-        except:
-            print("Row "+filename+" has invalid values")
-            continue
-        
-        # Yield the current batch if appropriate
-        if n != 0 and n % batchSize == 0:
-            yield np.array(collectedData), np.array(collectedLabels)
-            collectedData = []
-            collectedLabels = []
-        n += 1
-
-        processedFilename = imageFolder+"../preprocessed/"+filename
-
-        if save and h5file is not None and str(filename) in h5file:
-            #os.path.isfile(processedFilename):
-            #image = skimage.img_as_float(skimage.io.imread(processedFilename))
-            image = h5file[filename+"/image"]
-            collectedData.append(image)
-            collectedLabels.append(dataset[filename])
-            continue
-        try:
-            image = skimage.io.imread(imageFolder + "/" + filename, "pillow")
-        except:
-            print("Failed to load image "+filename)
-            continue
-        if image.ndim < 2:
-            print("Image has too few dimensions: "+imageFolder+"/"+filename+" "+str(image.ndim))
-            print(os.path.exists(imageFolder + "/" + filename))
-            print(image)
-            continue
-        resized = preprocessImage(image, settings.imgRows, settings.imgCols)
-
-        collectedData.append(resized)
-        collectedLabels.append(dataset[filename])
-        if save and h5file is not None:
-            if filename+"/image" not in h5file:
-                h5file[filename+"/image"] = resized
-            else:
-                print("Somehow "+filename+"/image already in h5file....")
-            skimage.io.imsave(imageFolder+"../preprocessed/"+filename, resized)
-
-    #Yield any remaining images
-    yield np.array(collectedData), np.array(collectedLabels)
-    collectedData = []
-    collectedLabels = []
-                
-        
 class HumpbackImagegen(ParallelDatagen):
     """
     Generates augmented humpback image training data, and augments the
@@ -280,8 +216,6 @@ class HumpbackImagegen(ParallelDatagen):
             try:
                 image = skimage.io.imread(imageFolder + "/" + filename, "pillow")
             except:
-                import pdb
-                pdb.set_trace()
                 print("Failed to load image "+filename)
                 continue
             
