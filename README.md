@@ -6,7 +6,7 @@ For ease of use, this repo includes a dockerfile at docker/Dockerfile that can b
 
 If you'd like to run the model in CPU-only mode, change the first line in the Dockerfile to 
 ```
-FROM gcr.io/tensorflow/tensorflow:latest-cpu
+FROM gcr.io/tensorflow/tensorflow
 ```
 
 Then, you'll need to build the docker image (installing dependencies etc may take a little while):
