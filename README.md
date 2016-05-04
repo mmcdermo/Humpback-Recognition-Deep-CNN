@@ -46,7 +46,7 @@ python run.py --trainCSV trainingData.csv --imageDir imageDirectory/ --train
 ```
 
 ## Additional Files
-The default model in this project uses a pretrained VGGNet deep CNN as a feature extraction stage. The script expects this file to be located at VGG/FullVGGWeights.h5. It's not included in this repository as the weights are over 500mb. Contact me if you need them - I'll host them publically at some point soon. 
+The default model in this project uses the first several layers of VGGNet for feature extraction. The script expects a saved keras VGGNet model file to be located at VGG/FullVGGWeights.h5. It's not included in this repository as the weights are over 500mb. Contact me if you need them - I'll host them publically at some point soon. 
 
 ## Generating training data
 To generate trainingData.csv from a new batch of images, you can use the preprocessing/humpbackData.py script:
