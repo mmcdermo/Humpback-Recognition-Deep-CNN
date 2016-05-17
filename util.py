@@ -1,5 +1,6 @@
 import csv
 import math
+import h5py
 import numpy as np
 
 def loadTrainingCSV(filename):
@@ -32,6 +33,41 @@ def loadTrainingCSV(filename):
             idDict[row[1]] = row[0].split("-")[0]
             
     return (trainDict, idDict, targetSize, maxWhaleID)
+
+def extractIDMapping(data):
+    """
+    Extracts a mapping of internal IDs to whale IDs. Assumes that
+    image filenames have the whale ID as a prefix before '-'
+    """
+    idDict = {}
+    for filename in data:
+        idDict[data[filename][0]] = filename.split("-")[0]
+    return idDict
+#
+# HDF5 helpers
+#
+def storeHDF5Dict(h5file, basePath, d):
+    """
+    Store a python dictionary `d` in an hdf5 file starting at `basePath`
+    """
+    for k in d:
+        if isinstance(d[k], dict):
+            storeHDF5Dict(h5file, basePath+"/"+k, d[k])
+        else:
+            h5file[basePath+"/"+k] = d[k]
+
+def loadHDF5Dict(h5file, path):
+    """
+    Load a python dictionary that was stored in an hdf5 file
+    """
+    d = {}
+    for k in h5file[path]:
+        if isinstance(h5file[path+"/"+k], h5py.Group):
+            d[k] = loadHDF5Dict(h5file, path+"/"+k)
+        else:
+            # TODO: Currently works only for scalars.
+            d[k] = h5file[path+"/"+k][()].item()
+    return d
 
 #
 #  Data processing

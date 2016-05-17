@@ -176,7 +176,11 @@ class BasicModel(CustomModel):
         print("Number correct fluke positions: "+str(correct) + " / "+str(len(X_test) * (len(outputs)-1)))
         print("Number correct whale IDs: "+str(correctIDs) + " / "+str(len(X_test) ))
         avgPos = float(sum(correctIDPositions)) / float(len(correctIDPositions))
+        accuracy = avgPos / float(len(outputs[4][0]))
         print("Average correct whale ID position: "+str(avgPos)+"/"+str(len(outputs[4][0])))
+        return {
+            "accuracy": accuracy
+        }
 
 class VGGModel(CustomModel):
     """
@@ -452,7 +456,7 @@ def vggAdapter(input_shape):
         Convolution2D(64, 3, 3, init='he_normal', border_mode='same', input_shape=input_shape), Activation('relu'),
         Convolution2D(64, 3, 3, init='he_normal',input_shape=input_shape), Activation('relu'),
         MaxPooling2D(pool_size=(2, 2)),
-        Dropout(0.5),
+        #Dropout(0.5),
         
         Convolution2D(256, 3, 3, init='he_normal', border_mode='same'), Activation('relu'),
         Convolution2D(256, 3, 3, init='he_normal'), Activation('relu'),

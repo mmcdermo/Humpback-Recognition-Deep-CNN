@@ -44,7 +44,7 @@ def permutationPredictClasses(model, datagen, trainDict, imageNames, numPermutat
     for i in range(len(imageNames)):
         startIdx = int(i * numPermutations)
         endIdx = int((i + 1) * numPermutations)
-
+        
         imSlice = []
         for j in range(len(outputs)):
             imSlice.append([])

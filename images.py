@@ -212,13 +212,12 @@ class HumpbackImagegen(ParallelDatagen):
         random.shuffle(filenames)
         for filename in filenames:
             n += 1
-
-            try:
+            image = None
+            try:                
                 image = skimage.io.imread(imageFolder + "/" + filename, "pillow")
             except:
                 print("Failed to load image "+filename)
                 continue
-            
             resized = preprocessImage(image, settings.imgRows, settings.imgCols)
             d = dataset[filename]
             points = [[d[1], d[2]], [d[3], d[4]]]
