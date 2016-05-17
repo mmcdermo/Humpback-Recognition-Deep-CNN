@@ -17,6 +17,7 @@ RUN update-alternatives --set libblas.so.3 \
 RUN pip install -U scikit-learn
 RUN pip install -U keras
 RUN pip install -U h5py
+RUN pip install -U flask
 
 VOLUME /humpbackModel/
 RUN mkdir -p /root/.keras/
