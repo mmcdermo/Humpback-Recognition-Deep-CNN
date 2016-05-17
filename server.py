@@ -24,13 +24,13 @@ import random
 
 app = Flask(__name__)
 
-@app.route('/cnnid/algorithms/')
+@app.route('/algorithms/')
 def algorithms():
     experimentDict = manage.experimentClasses()
     print(experimentDict.keys())
     return jsonify({"algorithms": experimentDict.keys()})
 
-@app.route('/cnnid/algorithm/<string:algorithmName>/predictImage', methods=['GET'])
+@app.route('/algorithm/<string:algorithmName>/predictImage', methods=['GET'])
 def predictImage(algorithmName):
     # Ensure filename is provided correctly
     filename = request.args.get('filename', '')
