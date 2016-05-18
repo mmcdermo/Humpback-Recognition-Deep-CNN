@@ -21,6 +21,7 @@ from multiprocessing import Queue, Process, Pipe, Lock
 import multiprocessing
 import Queue as Q
 import random
+import os.path
 
 app = Flask(__name__)
 
@@ -36,7 +37,9 @@ def predictImage(algorithmName):
     filename = request.args.get('filename', '')
     if filename == "":
         return make_response(jsonify({'error': 'Filename not provided'}), 400)
-
+    if not os.path.isfile(filename):
+        print("Error: File "+filename+" not found")
+        return make_response(jsonify({'error': 'Could not find file '+filename}), 400)
     # Ensure experiment exists
     experimentDict = manage.experimentClasses()
     if algorithmName not in experimentDict:

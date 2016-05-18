@@ -15,6 +15,15 @@ def getMaxWhaleID(data):
 class VGGStack(exp.KerasExperiment):
     experimentName="VGGStack"
 
+    def loadData(self):
+        """
+        Helper function to load data given self.envParams
+        """
+        with open(self.envParams["dataTrain"], 'r') as file:
+            self.trainingData = json.loads(file.read())
+        with open(self.envParams["dataTest"], 'r') as file:
+            self.testingData = json.loads(file.read())
+            
     def predictImage(self, filename, trialName=None, stateNum=None):
         # Load saved state
         self.loadTrial(trialName, stateNum)
@@ -24,8 +33,6 @@ class VGGStack(exp.KerasExperiment):
         idSoftmaxOut = predicted[4]
         classOut = evaluate.classOutput(idSoftmaxOut)
 
-        with open(self.envParams["dataTrain"], 'r') as file:
-            self.trainingData = json.loads(file.read())
         idDict = util.extractIDMapping(self.trainingData)
         
         print("Top 10 identity predictions: ")
@@ -34,6 +41,11 @@ class VGGStack(exp.KerasExperiment):
             #pruned = filter(lambda x: str(x) in idDict, classOut[:20])
         return map(lambda x: {"whaleID": idDict[str(x[0])], "probability": x[1]}, classOut[:20])
 
+    def evaluate(self, trialName=None, stateNum=None):
+        self.loadTrial(trialName, stateNum)
+        predictions = evaluate.evaluatePermutations(self.trainingData, self.testingData, self.model, self.datagen)
+        return predictions
+                
     def listEnvParams(self):
         return [
             exp.envParam("vggWeights", desc="h5 weights file for complete VGGNet", required=True),
@@ -52,13 +64,7 @@ class VGGStack(exp.KerasExperiment):
         }]
         
     def setupTrial(self, trialParams):
-        with open(self.envParams["dataTrain"], 'r') as file:
-            raw=file.read()
-            self.trainingData = json.loads(raw)
-        with open(self.envParams["dataTest"], 'r') as file:
-            raw=file.read()
-            self.testingData = json.loads(raw)
-
+        self.loadData()
         maxWhaleID = max(getMaxWhaleID(self.trainingData), getMaxWhaleID(self.testingData))
         if "batchSize" not in self.envParams:
             self.envParams["batchSize"] = 16

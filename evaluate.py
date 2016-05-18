@@ -194,7 +194,7 @@ def histogram(arr, bins):
         hist[hBin] += 1
     return (hist, hMin, hMax, step)
     
-def evaluatePermutations(trainingData, trainDict, testingData, model, trainDatagen):
+def evaluatePermutations(trainingData, testingData, model, trainDatagen):
         numPics = {}
         maxWhaleID = -1
         for x in trainingData:
@@ -212,7 +212,7 @@ def evaluatePermutations(trainingData, trainDict, testingData, model, trainDatag
 
         numTest = 400
         names = testingData.keys()[0:numTest]
-        allSoftmaxOutputs = permutationPredictClasses(model, trainDatagen, trainDict, names, 1)
+        allSoftmaxOutputs = permutationPredictClasses(model, trainDatagen, testingData, names, 1)
         # Track the softmax probabilities for matches and match failures
         matchProbabilities = []
         noMatchProbabilities = []
@@ -240,8 +240,6 @@ def evaluatePermutations(trainingData, trainDict, testingData, model, trainDatag
                 else:
                     noMatchProbabilities.append(classOut[0][1])
                 
-                print("Pos: "+str(pos))
-                print("Npix:"+str(numPics[targetClass]))
                 positions.append(pos)
                 numPicsPos.append([pos, numPics[targetClass]])
                 if numPics[targetClass] > 3:

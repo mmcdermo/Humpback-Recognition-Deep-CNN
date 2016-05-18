@@ -16,33 +16,67 @@ docker build -t humpbackModel ./Docker
 
 Once the docker image is built, you can run it and mount this github repo inside of it:
 ```
-docker run -it -v /path/to/this/repo/:/humpbackModel/ humpbackModel
+docker run -it -v -p 5000:5000 /path/to/this/repo/:/humpbackModel/ humpbackModel
 ```
 
 Then, you should be able to run the model inside the container:
 ```
-python /humpbackModel/run.py -h
+python /humpbackModel/server.py
 ```
 
-## Usage and examples
-Usage of run.py can also be obtained by ```python run.py -h```
+## Running the prediction server
+You can run the prediction server with:
+
+```
+python /humpbackModel/server.py
+```
+This will start a simple flask server on port 5000 that will perform predictions using any of the available experiment classes defined in `experiments.py`
+
+To perform predictions, at least two files must be present:
+  - <experiment_name>_params.json
+  - experiments/<experiment_name>/trials.h5
+
+Additionally, any files needed by the particular experiment (as given by <experiment_name>_params.json) must be present. 
+
+To make a prediction using the server, you can make a request to 
+
+```
+127.0.0.1:5000/algorithm/<experiment_name>/predictImage?filename=file
+```
+
+Where filename is the path to a file from the CWD of server.py.
+
+
+## Usage of manage.py
+Usage of manage.py can also be obtained by ```python manage.py -h```
 
 ### Prediction
 To predict the identity of a whale in an image, you can run:
 ```
-python run.py --trainCSV trainingData.csv --imageDir imageDirectory/ --predict whale-fluke-image.jpg --storedWeights weightsFile.h5
+python manage.py --experiment <experiment_name> --predict <filename> {... experiment specific arguments ...}
 ```
 
-### Evaluation
-To guage the accuracy of the model on the held out test set:
+Specifically for VGGStack, you can run:
 ```
-python run.py --trainCSV trainingData.csv --imageDir imageDirectory/ --evaluate --storedWeights weightsFile.h5
+python manage.py --experiment VGGStack --predict orig25/10419-nb99-2734-27.jpg --vggWeights VGG/FullVGGWeights.h5 --dataTrain humpbackClassification_trainingData.json --dataTest humpbackClassification_testingData.json --imageFolder orig25/
 ```
 
 ### Training
-To train a model from scratch:
+To train VGGStack, you can run:
 ```
-python run.py --trainCSV trainingData.csv --imageDir imageDirectory/ --train
+python manage.py --experiment VGGStack --train --vggWeights VGG/FullVGGWeights.h5 --dataTrain humpbackClassification_trainingData.json --dataTest humpbackClassification_testingData.json --imageFolder orig25/
+```
+
+### Evaluation
+To guage the accuracy of VGGStack on the held out test set:
+```
+python manage.py --experiment VGGStack --evaluate --vggWeights VGG/FullVGGWeights.h5 --dataTrain humpbackClassification_trainingData.json --dataTest humpbackClassification_testingData.json --imageFolder orig25/
+```
+
+### Training
+To train VGGStack, you'd run:
+```
+python manage.py --experiment VGGStack --train --vggWeights VGG/FullVGGWeights.h5 --dataTrain humpbackClassification_trainingData.json --dataTest humpbackClassification_testingData.json --imageFolder orig25/
 ```
 
 ## Additional Files

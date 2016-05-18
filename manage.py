@@ -51,14 +51,13 @@ def main():
     # Configure argument parser
     parser = argparse.ArgumentParser(description='Experiment manager.')
 
-    loadGroup = parser.add_mutually_exclusive_group(required=True)
-    loadGroup.add_argument("--experiment", help="Which experiment you'd like to run")
-    loadGroup.add_argument("--loadTrial", help="Which trial you'd like to load")
+    parser.add_argument("--experiment", help="Which experiment you'd like to run", required=True)
+    parser.add_argument("--loadTrial", help="Which trial you'd like to load")
     
     modeGroup = parser.add_mutually_exclusive_group(required=True)
     modeGroup.add_argument("--train", help="Use with --experiment or --loadTrial to train the model", action='store_const', const=True, default=False)
     modeGroup.add_argument("--evaluate", help="Use with --loadTrial to evaluate performance", action='store_const', const=True, default=False)
-    modeGroup.add_argument("--predict", help="Use with --loadTrial to predict", action='store_const', const=True, default=False)
+    modeGroup.add_argument("--predict", help="Use with --loadTrial to predict the given image")
 
     if len(sys.argv) < 2:
         parser.print_help()
@@ -74,13 +73,21 @@ def main():
     if "experiment" in args:
         exp, envParams = experimentFromCommandline(args["experiment"])
         print(envParams)
-        exp.run(envParams)
-        
-    elif "loadTrial" in args:
-        # Check if file exists
-        # If it does, load up the trial, 
-        exp, envParams = experimentFromCommandline(args["experiment"])
-        pass
+
+        trialName = None
+        if "loadTrial" in args and args["loadTrial"]:
+            trialName = args["loadTrial"]
+            
+        if args["train"]:
+            exp.run(envParams)
+        if args["predict"]:
+            exp.envParams = envParams
+            predictions = exp.predictImage(args["predict"], trialName)
+        elif args["evaluate"]:
+            exp.envParams = envParams
+            performance = exp.evaluate()
+            pass
+        return
     
 if __name__ == "__main__":
     main()

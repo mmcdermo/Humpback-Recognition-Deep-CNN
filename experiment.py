@@ -84,7 +84,7 @@ class Experiment():
         If trialStr is not provided, it defaults to the first listed in the file.
         If stateNum is not provided, it defaults to the last state recorded.
         """
-        trialsFile = h5py.File(self.experimentDir()+"/trials.h5", "a")
+        trialsFile = h5py.File(self.experimentDir()+"/trials.h5")
         if trialStr == None:
             # Iterate until we can find a trial that has states
             for trial in trialsFile.keys():
