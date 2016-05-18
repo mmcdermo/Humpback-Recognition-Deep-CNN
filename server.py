@@ -36,6 +36,7 @@ def predictImage(algorithmName):
     # Ensure filename is provided correctly
     filename = request.args.get('filename', '')
     if filename == "":
+        print("Filename not provided")
         return make_response(jsonify({'error': 'Filename not provided'}), 400)
     if not os.path.isfile(filename):
         print("Error: File "+filename+" not found")
@@ -43,6 +44,7 @@ def predictImage(algorithmName):
     # Ensure experiment exists
     experimentDict = manage.experimentClasses()
     if algorithmName not in experimentDict:
+        print("Experiment does not exist")
         return make_response(jsonify({'error': 'Experiment does not exist'}), 404)
 
     # Load environment parameters from file
@@ -50,7 +52,8 @@ def predictImage(algorithmName):
     try:    
         with open(algorithmName+"_params.json", 'r') as file:
             envParams = json.loads(file.read())
-    except:
+    except Exception as e:
+        print("Failed to load environmental parameters file: "+algorithmName+", "+str(e))
         return make_response(jsonify({'error': 'Failed to load environmental parameters from '+algorithmName+"_params.json"}), 400)        
 
     # Send our task over the pipe and wait for a result. 
@@ -64,6 +67,8 @@ def predictImage(algorithmName):
     res = serverPipe.recv()
     serverPipeLock.release()
 
+    if "error" in res:
+        return make_response(jsonify({'error': res['error']}), 400)        
     return jsonify(res)
     
 def runPredictions(pipe):

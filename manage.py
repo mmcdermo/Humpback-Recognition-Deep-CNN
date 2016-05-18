@@ -53,6 +53,7 @@ def main():
 
     parser.add_argument("--experiment", help="Which experiment you'd like to run", required=True)
     parser.add_argument("--loadTrial", help="Which trial you'd like to load")
+    parser.add_argument("--experimentDir", help="Directory containing all experiment folders (default=./experiments)")
     
     modeGroup = parser.add_mutually_exclusive_group(required=True)
     modeGroup.add_argument("--train", help="Use with --experiment or --loadTrial to train the model", action='store_const', const=True, default=False)
@@ -72,7 +73,11 @@ def main():
 
     if "experiment" in args:
         exp, envParams = experimentFromCommandline(args["experiment"])
-        print(envParams)
+
+        
+        # Copy general parameters over for use in experiments
+        for k in args:
+            envParams[k] = args[k]
 
         trialName = None
         if "loadTrial" in args and args["loadTrial"]:

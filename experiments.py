@@ -68,6 +68,9 @@ class VGGStack(exp.KerasExperiment):
         maxWhaleID = max(getMaxWhaleID(self.trainingData), getMaxWhaleID(self.testingData))
         if "batchSize" not in self.envParams:
             self.envParams["batchSize"] = 16
+        else:
+            self.envParams["batchSize"] = int(self.envParams["batchSize"])
+        
         modelParams = {"nBins": 20,
                        "maxWhaleId": maxWhaleID,
                        "nCols": 146,

@@ -41,7 +41,10 @@ class Experiment():
             envParam("note", desc="This experiment has no custom environment parameters")]
 
     def experimentDir(self):
-        return "experiments/" + self.experimentName
+        rootDir = "experiments/"
+        if "experimentDir" in self.envParams and self.envParams["experimentDir"]:
+            rootDir = self.envParams["experimentDir"]
+        return rootDir + self.experimentName
 
     def run(self, envParams):
         """
@@ -85,6 +88,9 @@ class Experiment():
         If stateNum is not provided, it defaults to the last state recorded.
         """
         trialsFile = h5py.File(self.experimentDir()+"/trials.h5")
+        print("============================================")
+        print(" LOADING TRIALS FROM "+self.experimentDir()+"/trials.h5")
+        print("============================================")
         if trialStr == None:
             # Iterate until we can find a trial that has states
             for trial in trialsFile.keys():
@@ -332,6 +338,7 @@ class KerasExperiment(Experiment):
                         "performance": performance,
                         "notes": {"epoch": e, "time": btime1 - btime0}
                     }
+                    return
                     pars = getKerasModelParameters(self.model.model)
                     loadKerasModelParameters(self.model.model, pars)
                     
