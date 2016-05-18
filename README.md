@@ -33,10 +33,10 @@ python /humpbackModel/server.py
 This will start a simple flask server on port 5000 that will perform predictions using any of the available experiment classes defined in `experiments.py`
 
 To perform predictions, at least two files must be present:
-  - <experiment_name>_params.json
-  - experiments/<experiment_name>/trials.h5
+  - `experiment_name`_params.json
+  - experiments/`experiment_name`/trials.h5
 
-Additionally, any files needed by the particular experiment (as given by <experiment_name>_params.json) must be present. 
+Additionally, any files needed by the particular experiment (as given by `experiment_name`_params.json) must be present. 
 
 To make a prediction using the server, you can make a request to 
 
