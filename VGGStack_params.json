@@ -1,0 +1,6 @@
+{
+    "vggWeights": "VGG/FullVGGWeights.h5",
+    "dataTrain": "humpbackClassification_trainingData.json",
+    "dataTest": "humpbackClassification_testingData.json",
+    "imageFolder": "orig25/"
+}
